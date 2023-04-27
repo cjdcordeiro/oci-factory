@@ -35,6 +35,8 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [prepare-build-matrix]
     name: Trigger build pipelines
+    permissions:
+      actions: write
     env:
       IS_MAIN: ${{ github.ref_name == 'main' && true || false }}
     strategy:
