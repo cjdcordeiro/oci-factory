@@ -9,4 +9,3 @@ notify:
   # opt, type: List[str]
   mattermost-channels:
     - fbdezwkcxpfofpysjore1wpfoc
-

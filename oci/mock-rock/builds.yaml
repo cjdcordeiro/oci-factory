@@ -1,10 +1,9 @@
 version: 1
 
-images:  
+images:
   - source: "cjdcordeiro-new-test/oci-factory-fork"
     commit: da49d66f0aec5dc5d9f4aa98fb10827b0501c403
     directory: examples/mock-rock
     release-to:
       risks:
         - beta
-
