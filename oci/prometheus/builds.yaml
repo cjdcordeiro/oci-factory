@@ -1,0 +1,6 @@
+version: 1
+
+images:
+  - source: "canonical/prometheus-rock"
+    commit: 50f5d8434af2722a9befc299b1f63d20e7d6d185
+    directory: .

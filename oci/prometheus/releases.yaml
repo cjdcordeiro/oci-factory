@@ -1,0 +1,10 @@
+version: '1'
+channels:
+  2.43.0:
+    stable: 1
+  2.43:
+    stable: 2.43.0_stable
+  2:
+    stable: 2.43.0_stable
+  latest:
+    stable: 1
