@@ -1,0 +1,14 @@
+name: mock-rock-samir
+summary: My test
+description: my test
+version: "1.0"
+base: ubuntu:20.04
+license: Apache-2.0
+platforms:
+  amd64:
+
+parts:
+  hello:
+    plugin: nil
+    overlay-packages:
+      - sl
