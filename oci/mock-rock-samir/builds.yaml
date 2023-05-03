@@ -1,0 +1,10 @@
+version: 1
+
+images:  
+  - source: "SamirPS/oci-factory"
+    commit: 7856ed66848c96752b07a741c01427e8a8c8917d
+    directory: examples/mock-rock-samir
+    release-to:
+      risks: 
+        - stable
+        - edge
