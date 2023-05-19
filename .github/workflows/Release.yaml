@@ -132,7 +132,7 @@ jobs:
         uses: actions-x/commit@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'main'
+          branch: ${{ github.ref }}
           message: 'ci: automatically update oci/${{ inputs.oci-image-name }}/_releases.yaml, from ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           files: oci/${{ inputs.oci-image-name }}/_releases.yaml
           email: rocks-dev@lists.canonical.com

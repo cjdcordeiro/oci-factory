@@ -308,7 +308,7 @@ jobs:
           
       # - run: exit ${{ steps.wait-tests.outputs.run-conclusion == 'success' && 1 || 0 }}
 
-      - run: sleep 5
+      - run: sleep 10
 
       - name: Download vulnerability artifacts
         uses: dawidd6/action-download-artifact@v2
