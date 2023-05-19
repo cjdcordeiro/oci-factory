@@ -25,6 +25,6 @@ jobs:
           fail-on-error: true
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
-          trigger-timeout: "3m"
+          trigger-timeout: "30m"
           run-id: dummy
 

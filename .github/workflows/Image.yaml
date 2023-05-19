@@ -274,7 +274,7 @@ jobs:
           fail-on-error: true
           workflow-name: Tests.yaml
           payload: '{ "oci-image-name": "${{ steps.rename-oci-archive.outputs.name }}", "is-a-rock": ${{ env.IS_A_ROCK }}, "cache-key": "${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}", "vulnerability-report-suffix": "${{ env.VULNERABILITY_REPORT_SUFFIX }}" }'
-          trigger-timeout: "3m"
+          trigger-timeout: "10m"
           run-id: dummy
 
       - run: sleep 5
@@ -486,7 +486,7 @@ jobs:
           workflow-name: Release.yaml
           payload: '{ "oci-image-name": "${{ needs.prepare-build.outputs.oci-img-name }}", "image-trigger-cache-key": "${{ github.run_id }}-image-trigger"}'
           run-id: dummy
-          trigger-timeout: "3m"
+          trigger-timeout: "5m"
 
 
   generate-provenance:
