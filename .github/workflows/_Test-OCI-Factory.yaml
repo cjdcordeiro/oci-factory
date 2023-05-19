@@ -19,13 +19,21 @@ jobs:
         # Using this actions cause others can have this problem:
         # https://github.com/convictional/trigger-workflow-and-wait/issues/61
         uses: mathze/workflow-dispatch-action@v1.2.0
+        id: run-images
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.ref }}
           fail-on-error: true
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
-          trigger-timeout: "30m"
+          trigger-timeout: "3m"
           use-marker-step: true
-          run-id: dummy
 
+      - name: Wait for image workflows
+        uses: mathze/workflow-dispatch-action@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.run-images.outputs.run-id }}
+          wait-interval: 10s
+          fail-on-error: true
+          trigger-timeout: "30m"
