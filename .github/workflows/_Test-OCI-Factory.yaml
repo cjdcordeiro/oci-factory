@@ -22,19 +22,21 @@ jobs:
         id: run-images
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # ref: ${{ github.ref }}
+          ref: ${{ github.ref }}
           fail-on-error: true
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
-          trigger-timeout: "3m"
-          # use-marker-step: true
-          run-id: dummy
+          trigger-timeout: "1m"
+          use-marker-step: true
 
       - name: Wait for image workflows
         uses: mathze/workflow-dispatch-action@v1.2.0
+        id: wait-images
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.run-images.outputs.run-id }}
           wait-interval: 10s
           fail-on-error: true
-          trigger-timeout: "30m"
+          wait-timeout: "30m"
+
+      - run: exit ${{ steps.wait-images.outputs.run-conclusion == 'success' && 1 || 0 }}
