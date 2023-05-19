@@ -21,6 +21,7 @@ jobs:
         uses: mathze/workflow-dispatch-action@v1.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref }}
           fail-on-error: true
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
