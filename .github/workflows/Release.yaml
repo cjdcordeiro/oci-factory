@@ -116,6 +116,8 @@ jobs:
             --all-releases oci/${{ inputs.oci-image-name }}/_releases.yaml \
             --all-revision-tags "${{ steps.get-all-canonical-tags.outputs.canonical-tags-file }}" \
             --ghcr-repo "${{ github.repository_owner }}/oci-factory"
+      
+      - run: git pull --quiet
 
       - name: Commit oci/${{ inputs.oci-image-name }}/_releases.yaml
         uses: actions-x/commit@v6
