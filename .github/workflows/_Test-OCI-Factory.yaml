@@ -27,7 +27,8 @@ jobs:
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
           trigger-timeout: "3m"
-          use-marker-step: true
+          # use-marker-step: true
+          run-id: dummy
 
       - name: Wait for image workflows
         uses: mathze/workflow-dispatch-action@v1.2.0
