@@ -19,7 +19,7 @@ jobs:
         id: run-images
         uses: pauldraper/workflow-dispatch@v1.5
         with:
-          marker-input: ${{ github.run_id }}_${{ matrix.oci-image }}
+          marker-input: external_ref_id
           workflow: Image.yaml
           inputs: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
           token: ${{ secrets.GITHUB_TOKEN }}

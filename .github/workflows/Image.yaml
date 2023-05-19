@@ -34,7 +34,8 @@ jobs:
       revision-data-cache-key: ${{ steps.prepare-matrix.outputs.revision-data-cache-key }}
     steps:
       - name: ${{ inputs.external_ref_id }} #(2)
-        run: echo
+        run: echo 'Started by [${{ inputs.external_ref_id }}](${{ inputs.external_ref_id
+          }})' >> "$GITHUB_STEP_SUMMARY"
         
       - uses: actions/checkout@v3
 
