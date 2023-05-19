@@ -33,7 +33,7 @@ jobs:
       oci-img-name: ${{ steps.validate-image.outputs.img-name }}
       revision-data-cache-key: ${{ steps.prepare-matrix.outputs.revision-data-cache-key }}
     steps:
-      - name: ${{ github.event.inputs.external_ref_id }} #(2)
+      - name: ${{ inputs.external_ref_id }} #(2)
         run: echo
         
       - uses: actions/checkout@v3
@@ -291,7 +291,7 @@ jobs:
           run-id: ${{ steps.run-tests.outputs.run-id }}
           wait-interval: 10s
           fail-on-error: true
-          trigger-timeout: "10m"
+          wait-timeout: "10m"
           
       - run: sleep 5
 

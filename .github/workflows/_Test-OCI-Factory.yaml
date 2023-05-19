@@ -22,7 +22,7 @@ jobs:
         id: run-images
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
+          # ref: ${{ github.ref }}
           fail-on-error: true
           workflow-name: Image.yaml
           payload: '{ "oci-image-name": "${{ matrix.oci-image }}", "upload": true }'
