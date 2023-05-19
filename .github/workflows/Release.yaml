@@ -22,8 +22,9 @@ jobs:
     outputs:
       oci-image-name: ${{ steps.get-image-name.outputs.img-name }}
     steps:
-      - name: ${{ github.event.inputs.external_ref_id }} #(2)
-        run: echo
+      - name: ${{ inputs.external_ref_id }} #(2)
+        run: echo 'Started by [${{ inputs.external_ref_id }}](${{ inputs.external_ref_id
+          }})' >> "$GITHUB_STEP_SUMMARY"
         
       - uses: actions/checkout@v3
 

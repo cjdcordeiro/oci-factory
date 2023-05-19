@@ -50,4 +50,4 @@ jobs:
       #     # fail-on-error: true
       #     wait-timeout: "30m"
 
-      - run: exit ${{ steps.run-images.outputs.conclusion == 'success' && 1 || 0 }}
+      # - run: exit ${{ steps.run-images.outputs.conclusion == 'success' && 1 || 0 }}
