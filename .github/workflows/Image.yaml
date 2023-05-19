@@ -16,7 +16,11 @@ on:
         required: true
         type: boolean
         default: false
-
+      external_ref_id: #(1)
+        description: 'Optional ID for unique run detection'
+        required: false
+        type: string
+        default: "default-id"
 
 jobs:
   prepare-build:
@@ -29,6 +33,9 @@ jobs:
       oci-img-name: ${{ steps.validate-image.outputs.img-name }}
       revision-data-cache-key: ${{ steps.prepare-matrix.outputs.revision-data-cache-key }}
     steps:
+      - name: ${{ github.event.inputs.external_ref_id }} #(2)
+        run: echo
+        
       - uses: actions/checkout@v3
 
       - name: Infer number of image triggers
@@ -275,6 +282,7 @@ jobs:
           workflow-name: Tests.yaml
           payload: '{ "oci-image-name": "${{ steps.rename-oci-archive.outputs.name }}", "is-a-rock": ${{ env.IS_A_ROCK }}, "cache-key": "${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}", "vulnerability-report-suffix": "${{ env.VULNERABILITY_REPORT_SUFFIX }}" }'
           trigger-timeout: "10m"
+          use-marker-step: true
           run-id: dummy
 
       - run: sleep 5
@@ -486,6 +494,7 @@ jobs:
           workflow-name: Release.yaml
           payload: '{ "oci-image-name": "${{ needs.prepare-build.outputs.oci-img-name }}", "image-trigger-cache-key": "${{ github.run_id }}-image-trigger"}'
           run-id: dummy
+          use-marker-step: true
           trigger-timeout: "5m"
 
 
