@@ -16,11 +16,7 @@ on:
         required: true
         type: boolean
         default: false
-      external_ref_id: #(1)
-        description: 'Optional ID for unique run detection'
-        required: false
-        type: string
-        default: "default-id"
+
 
 jobs:
   prepare-build:
@@ -33,10 +29,6 @@ jobs:
       oci-img-name: ${{ steps.validate-image.outputs.img-name }}
       revision-data-cache-key: ${{ steps.prepare-matrix.outputs.revision-data-cache-key }}
     steps:
-      - name: ${{ inputs.external_ref_id }} #(2)
-        run: echo 'Started by [${{ inputs.external_ref_id }}](${{ inputs.external_ref_id
-          }})' >> "$GITHUB_STEP_SUMMARY"
-        
       - uses: actions/checkout@v3
 
       - name: Infer number of image triggers
@@ -270,45 +262,22 @@ jobs:
           key: ${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}
 
       - name: Run tests
+        # Using this actions cause others can have this problem:
+        # https://github.com/convictional/trigger-workflow-and-wait/issues/61
+        uses: mathze/workflow-dispatch-action@v1.2.0
         id: run-tests
-        uses: pauldraper/workflow-dispatch@v1.5
         env:
           IS_A_ROCK: ${{ matrix.dockerfile-build == '' && true || false }}
         with:
-          marker-input: external_ref_id
-          workflow: Tests.yaml
-          inputs: '{ "oci-image-name": "${{ steps.rename-oci-archive.outputs.name }}", "is-a-rock": ${{ env.IS_A_ROCK }}, "cache-key": "${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}", "vulnerability-report-suffix": "${{ env.VULNERABILITY_REPORT_SUFFIX }}" }'
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
-          wait: true
-        # # Using this actions cause others can have this problem:
-        # # https://github.com/convictional/trigger-workflow-and-wait/issues/61
-        # uses: mathze/workflow-dispatch-action@v1.2.0
-        # id: run-tests
-        # env:
-        #   IS_A_ROCK: ${{ matrix.dockerfile-build == '' && true || false }}
-        # with:
-        #   token: ${{ secrets.GITHUB_TOKEN }}
-        #   ref: ${{ github.ref }}
-        #   fail-on-error: true
-        #   workflow-name: Tests.yaml
-        #   payload: '{ "oci-image-name": "${{ steps.rename-oci-archive.outputs.name }}", "is-a-rock": ${{ env.IS_A_ROCK }}, "cache-key": "${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}", "vulnerability-report-suffix": "${{ env.VULNERABILITY_REPORT_SUFFIX }}" }'
-        #   trigger-timeout: "1m"
-        #   use-marker-step: true
+          ref: ${{ github.ref_name }}
+          fail-on-error: true
+          workflow-name: Tests.yaml
+          payload: '{ "oci-image-name": "${{ steps.rename-oci-archive.outputs.name }}", "is-a-rock": ${{ env.IS_A_ROCK }}, "cache-key": "${{ github.run_id }}-${{ steps.rename-oci-archive.outputs.name }}", "vulnerability-report-suffix": "${{ env.VULNERABILITY_REPORT_SUFFIX }}" }'
+          trigger-timeout: "3m"
+          run-id: dummy
 
-      # - name: Wait for tests
-      #   uses: mathze/workflow-dispatch-action@v1.2.0
-      #   id: wait-tests
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     run-id: ${{ steps.run-tests.outputs.run-id }}
-      #     wait-interval: 10s
-      #     fail-on-error: true
-      #     wait-timeout: "10m"
-          
-      # - run: exit ${{ steps.wait-tests.outputs.run-conclusion == 'success' && 1 || 0 }}
-
-      - run: sleep 10
+      - run: sleep 5
 
       - name: Download vulnerability artifacts
         uses: dawidd6/action-download-artifact@v2
@@ -507,41 +476,18 @@ jobs:
           key: ${{ github.run_id }}-image-trigger
 
       - name: Dispatch Releases workflow
-        id: run-releases
-        uses: pauldraper/workflow-dispatch@v1.5
-        env:
-          IS_A_ROCK: ${{ matrix.dockerfile-build == '' && true || false }}
-        with:
-          marker-input: external_ref_id
-          workflow: Release.yaml
-          inputs: '{ "oci-image-name": "${{ needs.prepare-build.outputs.oci-img-name }}", "image-trigger-cache-key": "${{ github.run_id }}-image-trigger"}'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
-          wait: true
         # Using this action because others can have this problem:
         # https://github.com/convictional/trigger-workflow-and-wait/issues/61
-      #   uses: mathze/workflow-dispatch-action@v1.2.0
-      #   id: run-releases
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     ref: ${{ github.ref }}
-      #     fail-on-error: true
-      #     workflow-name: Release.yaml
-      #     payload: '{ "oci-image-name": "${{ needs.prepare-build.outputs.oci-img-name }}", "image-trigger-cache-key": "${{ github.run_id }}-image-trigger"}'
-      #     use-marker-step: true
-      #     trigger-timeout: "1m"
-
-      # - name: Wait for releases
-      #   uses: mathze/workflow-dispatch-action@v1.2.0
-      #   id: wait-releases
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     run-id: ${{ steps.run-releases.outputs.run-id }}
-      #     wait-interval: 10s
-      #     fail-on-error: true
-      #     wait-timeout: "5m"
-
-      # - run: exit ${{ steps.wait-releases.outputs.run-conclusion == 'success' && 1 || 0 }}
+        uses: mathze/workflow-dispatch-action@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+          fail-on-error: true
+          workflow-name: Release.yaml
+          payload: '{ "oci-image-name": "${{ needs.prepare-build.outputs.oci-img-name }}", "image-trigger-cache-key": "${{ github.run_id }}-image-trigger"}'
+          run-id: dummy
+          trigger-timeout: "3m"
+          use-marker-step: true
 
 
   generate-provenance:
