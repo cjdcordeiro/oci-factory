@@ -16,7 +16,11 @@ on:
         required: true
         type: boolean
         default: false
-
+      external_ref_id: #(1)
+        description: 'Optional ID for unique run detection'
+        required: false
+        type: string
+        default: "default-id"
 
 jobs:
   prepare-build:
