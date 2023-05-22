@@ -11,7 +11,8 @@ upload:
     directory: .
     dockerfile-build:
       version: 0.40.3
-      platforms: amd64
+      platforms:
+        - amd64
     release:
       0.40.3:
         end-of-life: "2023-06-22T00:00:00Z"
