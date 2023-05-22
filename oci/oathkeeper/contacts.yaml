@@ -1,3 +1,5 @@
 notify:
   emails:
     - natalia.nowakowska@canonical.com
+  mattermost-channels:
+    - s61x4s44upgo8qd4jfanomar8e

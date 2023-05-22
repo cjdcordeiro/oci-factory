@@ -1,9 +1,0 @@
-version: 1
-
-images:
-  - source: "canonical/oathkeeper-rock"
-    commit: 7c09e02d6a23c9b671f557adb2023fed06be7c86
-    directory: .
-    release-to:
-      risks:
-        - edge
