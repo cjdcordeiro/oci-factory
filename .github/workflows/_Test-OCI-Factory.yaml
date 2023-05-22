@@ -19,6 +19,7 @@ jobs:
         # Using this actions cause others can have this problem:
         # https://github.com/convictional/trigger-workflow-and-wait/issues/61
         uses: mathze/workflow-dispatch-action@v1.2.0
+        id: run-image
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.ref_name }}
@@ -30,3 +31,7 @@ jobs:
           use-marker-step: true
           run-id: dummy
 
+      - name: Write step summary
+        run: |
+          url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.run-image.outputs.run-id }}'
+          echo " - Triggered image '${{ matrix.oci-image }}' workflow at [${url}](${url})" >> "$GITHUB_STEP_SUMMARY"

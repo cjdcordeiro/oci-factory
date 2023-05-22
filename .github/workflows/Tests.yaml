@@ -47,8 +47,7 @@ jobs:
     name: Fetch OCI image for testing
     steps:
       - name: ${{ inputs.external_ref_id }} #(2)
-        run: echo 'Started by [${{ inputs.external_ref_id }}](${{ inputs.external_ref_id
-          }})' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'Started by ${{ inputs.external_ref_id }}' >> "$GITHUB_STEP_SUMMARY"
         
       - uses: actions/cache/restore@v3
         if: ${{ inputs.test-from == 'cache' }}
