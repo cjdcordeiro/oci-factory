@@ -3,14 +3,14 @@ version: 1
 release:
   latest:
     end-of-life: "2023-06-22T00:00:00Z"
-    edge: 0.40.3
+    edge: 0.40.3_edge
 
 upload:
   - source: "canonical/oathkeeper-rock"
     commit: 7c09e02d6a23c9b671f557adb2023fed06be7c86
     directory: .
     release:
-      0.40.3:
+      0.40.3-22.04:
         end-of-life: "2023-06-22T00:00:00Z"
         risks:
           - edge
