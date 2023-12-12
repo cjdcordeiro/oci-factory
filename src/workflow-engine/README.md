@@ -27,13 +27,17 @@ will be deployed.
 - this TF configuration is designed to use an internal OpenStack
 infrastructure, so before proceeding, make sure you:
   - connect to the VPN,
-  - forward all the necessary remote endpoints to your `localhost``, with:
+  - because of Bastion, forward all the necessary remote endpoints to your
+    `localhost``, with:
 
       ```bash
       ssh -L 5000:<keystoneUrl>:<keystonePort> -L 9696:<neutronUrl>:<neutronPort> -L 8774:novaApiUrl>:<novaApiPort> <username>@<internalOSServer>
       ```
 
-    this is needed because of Bastion,
+    you can find out these values by looking at:
+    - `env`'s `OS_AUTH_URL` for the Keystone details,
+    - `openstack catalog show network` for the Neutron details, and
+    - `openstack catalog show compute` for the Nova API details,
 - (optional) if you are managing an already existing deployment, **you need**
 to request and copy the corresponding `terraform.tfstate` file into this
 directory. NOTE: this file may contain sensitive information so please do not
@@ -42,8 +46,9 @@ commit or share it.
 ### Deploy
 
 These Terraform configurations will take care of deploying the VMs and
-configuring them with MicroK8s. The `cluster.tf` file has the OpenStack and
-MicroK8s configurations, and it relies on `variables.tf` and `cloud-init.yml`.
+configuring them with MicroK8s. The `deploy_cluster.tf` file has the OpenStack
+and MicroK8s configurations, and it relies on `variables.tf` and
+`cloud-init.yml`.
 The former has the secret connection variables that need to be set before
 deploying the VMs, while the latter contains the Cloud-init recipes
 for configuring said nodes.
@@ -66,6 +71,19 @@ for configuring said nodes.
 
 When performing any other Terraform command (e.g. `terraform destroy`), the
 first 3 steps above are also required if not yet set.
+
+#### Troubleshooting
+
+Do you see an error like the following?
+
+```log
+Error creating OpenStack compute client: No suitable endpoint could be found in the service catalog.
+```
+
+Then you might want to:
+
+- delete any old `.tfstate` files from obsolete deployments,
+- ensure the Openstack endpoints (Keystone, Neutron and Nova API) are correct.
 
 ### Access
 

@@ -9,6 +9,7 @@ terraform {
 }
 
 # Configure the OpenStack Provider
+# See https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs
 provider "openstack" {
   user_name   = var.openstack_username
   password    = var.openstack_password
@@ -16,10 +17,13 @@ provider "openstack" {
   region      = var.openstack_region
   # Forward the OS remote ports such that the auth_url, network and compute
   # urls are all reachable on localhost. 
-  auth_url = "http://localhost:5000/v2.0/"
+  auth_url = "https://keystone.ps5.canonical.com:5000/v3/"
+  insecure = true
+  # These overrides should be removed, but while both endpoints claim to be
+  # public, they are timing out when being accessed
   endpoint_overrides = {
-    "network" = "http://localhost:9696/v2.0/"
-    "compute" = "http://localhost:8774/v2/"
+    "network" = "https://localhost:9696/v2.0/"
+    "compute" = "https://localhost:8774/v2.1/"
   }
 }
 
@@ -56,14 +60,14 @@ resource "openstack_compute_instance_v2" "rocks-temporal-workers-controller" {
   name            = "rocks-temporal-workers-controller"
   # The images are refreshed regularly, so the IDs might change.
   # Double check the desired Jammy image ID before deploying.
-  image_id        = "bfa876f1-456a-440f-ae52-ea49bf6e35f6" # jammy
-  flavor_id       = "4"
-  key_pair        = "rocks-team"
+  image_id        = var.openstack_image_id
+  flavor_id       = var.openstack_flavor_id
+  key_pair        = var.openstack_key_pair
   security_groups = ["default"]
   user_data       = data.cloudinit_config.control_config.rendered
 
   network {
-    name = "net_prod-rocks-test"
+    name = "net_prod-rocks"
   }
 }
 
@@ -92,14 +96,14 @@ data "cloudinit_config" "workernode_config" {
 resource "openstack_compute_instance_v2" "rocks-temporal-workers-workernode" {
   # rocks-temporal-workers-controller is the microk8s control plane
   name            = "rocks-temporal-workers-workernode"
-  image_id        = "bfa876f1-456a-440f-ae52-ea49bf6e35f6" # jammy
-  flavor_id       = "3"
-  key_pair        = "rocks-team"
+  image_id        = var.openstack_image_id
+  flavor_id       = var.openstack_flavor_id
+  key_pair        = var.openstack_key_pair
   security_groups = ["default"]
   user_data       = data.cloudinit_config.workernode_config.rendered
 
   network {
-    name = "net_prod-rocks-test"
+    name = "net_prod-rocks"
   }
 }
 
