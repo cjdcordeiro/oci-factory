@@ -1,0 +1,9 @@
+version: 1
+images: 
+  # Mirror from opendev.org longer term?
+  - source: "openstack-snaps/rock-rabbitmq"
+    commit: 9206cbf3fa6db263ea1251cf6ec819aa1192ef86
+    directory: .
+    #release-to:
+      #risks:
+      #  - beta
